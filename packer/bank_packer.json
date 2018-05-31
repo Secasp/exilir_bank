@@ -1,0 +1,67 @@
+{
+  "variables": {
+    "aws_access_key": "{{env `AWS_KEY`}}",
+    "aws_secret_key": "{{env `AWS_SECRET`}}"
+  },
+
+  "builders": 
+  [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "us-east-1",
+    "source_ami": "ami-a4dc46db",
+    "instance_type": "t2.micro",
+    "ssh_username": "ubuntu",
+    "ami_name": "bank_ami"
+  }],
+
+
+  "provisioners": 
+  [
+
+   
+    {
+      "destination": "/home/ubuntu/",
+      "source": "provisioning.sh",
+      "type": "file"
+    },
+
+    {
+      "destination": "/home/ubuntu/",
+      "source": "deploy.sh",
+      "type": "file"
+    },
+
+    {
+      "destination": "/tmp/",
+      "source": "default",
+      "type": "file"
+    },
+
+
+    
+    {
+        
+
+    "type": "shell",
+    "inline": [
+      "sleep 10",
+      "sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D",
+      "sudo apt-add-repository 'deb https://apt.dockerproject.org/repo ubuntu-xenial main'",
+      "sudo apt-get update",
+      "sudo apt-get install -y docker-engine",
+      "sudo usermod -aG docker ubuntu",
+      "sudo apt-get -y install git",
+      "sudo apt-get -y install nginx",
+      "sudo chmod +x provisioning.sh && sudo chown ubuntu:ubuntu provisioning.sh",
+      "sudo chmod +x deploy.sh && sudo chown ubuntu:ubuntu deploy.sh",
+      "sudo cp /tmp/default /etc/nginx/sites-enabled/default",
+      "bash -x /home/ubuntu/provisioning.sh"
+
+      ]
+    }
+    
+  ]
+
+}

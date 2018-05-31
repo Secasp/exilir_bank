@@ -1,0 +1,16 @@
+version: '3'
+services:
+  bank_app:
+    image: "bank_app_elixir"
+    command: bash -c "/var/deploy.sh"
+    ports:
+     - "4000:4000"
+     - "4001:4001"
+    environment:
+     - DATABASE_URL=${URL}
+     - SECRET_KEY_BASE=${SECRET}
+     - MIX_ENV=${MIX}
+    depends_on:
+     - bank_db
+  bank_db:
+    image: "bank_db"
