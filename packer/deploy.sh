@@ -30,6 +30,7 @@ else
 fi
 
 cd elixir_bank/app/
+git clone https://github.com/wojtekmach/acme_bank.git acme_bank
 tar -cvf acme_bank.tar acme_bank
 docker build -t bank_app_elixir .
 cd ../db/
