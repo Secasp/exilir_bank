@@ -37,5 +37,8 @@ cd ../db/
 docker build -t bank_db .
 #Rebuild docker container if there is any change
 cd ../compose/
+#Load ENV-VARS
+source .env
 docker-compose up --build
+sudo service nginx restart
 
